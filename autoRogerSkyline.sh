@@ -4,7 +4,7 @@ if ! command -v sudo 1>/dev/null; then
 		echo "Please run as root (su) to install sudo"
 		exit
 	fi
-	echo "Ready to go\nUpdating Everything"
+	echo "Ready to go ! Updating Everything"
 	apt update
 	apt upgrade
 	echo "Installing sudo and disconnecting user"
@@ -12,7 +12,7 @@ if ! command -v sudo 1>/dev/null; then
 	sleep 1
 	adduser max sudo
 	echo "SUCCESS ! You will now be disconnected"
-	sleep 1
+	sleep 2
 	pkill -KILL -u max
 	exit
 else
