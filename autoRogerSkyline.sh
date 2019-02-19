@@ -1,4 +1,4 @@
-if ! command -v sudo 1>/dev/null; then
+if ! [ -x "$(command -v sudo)" ]; then
 	if [ "$EUID" -ne 0 ]
 	then echo "Please run as root"
 		exit
