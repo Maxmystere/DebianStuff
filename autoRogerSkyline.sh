@@ -131,14 +131,14 @@ apt upgrade
 		printf "#!/bin/sh
 
 # CONFIGURATION
-DIR='/etc/crontab'
-EVENTS='modify'
+DIR=\"/etc/crontab\"
+EVENTS=\"modify\"
 
 # MAIN
-inotifywait -m -e $EVENTS --timefmt '%Y-%m-%d %H:%M:%S' --format '%T %f' $DIR |
+inotifywait -m -e \$EVENTS --timefmt '%%Y-%%m-%%d %%H:%%M:%%S' --format '%%T %%f' \$DIR |
 while read date time file
 do
-    echo '$date $time Fichier modifie: $file'
+    echo \"\$date \$time Fichier modifie: \$file\"
 done
 " | sudo tee /etc/init.d/crontab_spy.sh
 		sudo chmod +x /etc/init.d/crontab_spy.sh
