@@ -28,6 +28,7 @@ else
 		sudo apt install vim -y
 		echo "We will change DHCP Last due to Bridged Adapter (For 42)"
 		sleep 4
+
 		echo "Installing ssh"
 		sudo apt install ssh -y
 		echo "We will now :"
@@ -35,11 +36,73 @@ else
 		echo "allow only public key"
 		echo "Prevent root access from ssh"
 		sleep 3
+
 		sudo sed -i 's/#Port 22/Port 4269/' /etc/ssh/sshd_config
 		sudo sed -i 's/#PasswordAuthentication yes/PasswordAuthentication no/' /etc/ssh/sshd_config
 		sudo sed -i 's/#PermitRootLogin prohibit-password/PermitRootLogin no/' /etc/ssh/sshd_config
 		echo "Done ! Restarting SSH"
 		sudo service sshd restart
+		echo "Success"
+		
+		echo "Installing firewall"
+		sleep 1
+		printf "#!/bin/sh
 
+# Vider les tables actuelles
+iptables -t filter -F
+
+# Vider les regles personnelles
+iptables -t filter -X
+
+# Interdire toute connexion entrante et sortante
+iptables -t filter -P INPUT DROP
+iptables -t filter -P FORWARD DROP
+iptables -t filter -P OUTPUT DROP
+
+# ---
+
+# Ne pas casser les connexions etablies
+iptables -A INPUT -m state --state RELATED,ESTABLISHED -j ACCEPT
+iptables -A OUTPUT -m state --state RELATED,ESTABLISHED -j ACCEPT
+
+# Autoriser loopback
+iptables -t filter -A INPUT -i lo -j ACCEPT
+iptables -t filter -A OUTPUT -o lo -j ACCEPT
+
+# ICMP (Ping)
+iptables -t filter -A INPUT -p icmp -j ACCEPT
+iptables -t filter -A OUTPUT -p icmp -j ACCEPT
+
+# ---
+
+# SSH In/Out
+iptables -t filter -A INPUT -p tcp --dport 2222 -j ACCEPT
+iptables -t filter -A OUTPUT -p tcp --dport 2222 -j ACCEPT
+
+# DNS In/Out
+iptables -t filter -A OUTPUT -p tcp --dport 53 -j ACCEPT
+iptables -t filter -A OUTPUT -p udp --dport 53 -j ACCEPT
+iptables -t filter -A INPUT -p tcp --dport 53 -j ACCEPT
+iptables -t filter -A INPUT -p udp --dport 53 -j ACCEPT
+
+# NTP Out
+iptables -t filter -A OUTPUT -p udp --dport 123 -j ACCEPT
+
+# HTTP + HTTPS Out
+iptables -t filter -A OUTPUT -p tcp --dport 80 -j ACCEPT
+iptables -t filter -A OUTPUT -p tcp --dport 443 -j ACCEPT
+
+# HTTP + HTTPS In
+iptables -t filter -A INPUT -p tcp --dport 80 -j ACCEPT
+iptables -t filter -A INPUT -p tcp --dport 443 -j ACCEPT
+iptables -t filter -A INPUT -p tcp --dport 8443 -j ACCEPT
+" | sudo tee /etc/init.d/firewall
+		sudo chmod +x /etc/init.d/firewall
+		sudo update-rc.d firewall defaults
+		sudo sh /etc/init.d/firewall
+		echo "Firewall successfully installed at startup"
+		sleep 2
+
+		
 	fi
 fi
