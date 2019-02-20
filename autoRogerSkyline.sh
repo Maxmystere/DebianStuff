@@ -9,10 +9,10 @@ if ! command -v sudo 1>/dev/null; then
 	apt upgrade
 	echo "Installing sudo and disconnecting user"
 	apt install sudo
-	sleep 1
+	#sleep 1
 	adduser max sudo
 	echo "SUCCESS ! You will now be disconnected"
-	sleep 2
+	#sleep 2
 	pkill -KILL -u max
 	exit
 else
@@ -27,7 +27,7 @@ else
 		echo "Installing vim"
 		sudo apt install vim -y
 		echo "We will change DHCP Last due to Bridged Adapter (For 42)"
-		sleep 4
+		#sleep 4
 
 		echo "Installing ssh"
 		sudo apt install ssh -y
@@ -35,7 +35,7 @@ else
 		echo "change ssh port to 4269"
 		echo "allow only public key"
 		echo "Prevent root access from ssh"
-		sleep 3
+		#sleep 3
 
 		sudo sed -i 's/#Port 22/Port 4269/' /etc/ssh/sshd_config
 		sudo sed -i 's/#PasswordAuthentication yes/PasswordAuthentication no/' /etc/ssh/sshd_config
@@ -45,7 +45,7 @@ else
 		echo "Success"
 		
 		echo "Installing firewall"
-		sleep 1
+		#sleep 1
 		printf "#!/bin/sh
 
 # Vider les tables actuelles
@@ -111,10 +111,10 @@ iptables -A INPUT -p tcp --tcp-flags ALL ALL -m limit --limit 1/h -j ACCEPT
 		sudo update-rc.d firewall defaults
 		sudo sh /etc/init.d/firewall
 		echo "Firewall and DDOS Protection successfully installed at startup"
-		sleep 2
+		#sleep 2
 
 		echo "Adding planned task for updating apt"
-		sleep 1
+		#sleep 1
 		printf "#!/bin/sh
 
 apt update
@@ -124,7 +124,7 @@ apt upgrade
 		sudo update-rc.d update_package.sh defaults
 		echo "00 04 * * 1 /etc/init.d/update_package.sh >> /var/log/update_script.log" | sudo crontab -
 		echo "Done"
-		sleep 1
+		#sleep 1
 
 		echo "Installing inotify-tools to spy /etc/crontab"
 		sudo apt install inotify-tools
@@ -143,7 +143,6 @@ done
 " | sudo tee /etc/init.d/crontab_spy.sh
 		sudo chmod +x /etc/init.d/crontab_spy.sh
 		sudo update-rc.d crontab_spy.sh defaults
-		sudo sh /etc/init.d/crontab_spy.sh
 		echo "00 00 * * * /etc/init.d/crontab_spy.sh" | sudo crontab -
 	fi
 fi
