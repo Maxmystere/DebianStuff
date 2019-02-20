@@ -130,7 +130,6 @@ apt upgrade
 		sudo apt install mailutils -y
 		sudo apt install incron -y
 		echo "root" | sudo tee -a /etc/incron.allow
-		printf "echo HELLOWORLD\n" | sudo tee /root/script/send_cron_mail.sh
-		printf "/etc/crontab IN_MODIFY root/send_mail_function\n" | sudo incrontab -
+		printf "/etc/crontab IN_MODIFY echo \"crontab file has been modified\" | mail -s \"crontab Alert\" root@localhost\n" | sudo incrontab -
 	fi
 fi
