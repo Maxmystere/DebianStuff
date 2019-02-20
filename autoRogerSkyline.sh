@@ -96,13 +96,54 @@ iptables -t filter -A OUTPUT -p tcp --dport 443 -j ACCEPT
 iptables -t filter -A INPUT -p tcp --dport 80 -j ACCEPT
 iptables -t filter -A INPUT -p tcp --dport 443 -j ACCEPT
 iptables -t filter -A INPUT -p tcp --dport 8443 -j ACCEPT
+
+# Synflood Protection
+iptables -A INPUT -p tcp --syn -m limit --limit 2/s --limit-burst 30 -j ACCEPT
+
+# Pingflood Protection
+iptables -A INPUT -p icmp --icmp-type echo-request -m limit --limit 1/s -j ACCEPT
+
+# Portscan Protection
+iptables -A INPUT -p tcp --tcp-flags ALL NONE -m limit --limit 1/h -j ACCEPT
+iptables -A INPUT -p tcp --tcp-flags ALL ALL -m limit --limit 1/h -j ACCEPT
 " | sudo tee /etc/init.d/firewall
 		sudo chmod +x /etc/init.d/firewall
 		sudo update-rc.d firewall defaults
 		sudo sh /etc/init.d/firewall
-		echo "Firewall successfully installed at startup"
+		echo "Firewall and DDOS Protection successfully installed at startup"
 		sleep 2
 
-		
+		echo "Adding planned task for updating apt"
+		sleep 1
+		printf "#!/bin/sh
+
+apt update
+apt upgrade
+" | sudo tee /etc/init.d/update_package.sh
+		sudo chmod +x /etc/init.d/update_package.sh
+		sudo update-rc.d update_package.sh defaults
+		echo "00 04 * * 1 /etc/init.d/update_package.sh >> /var/log/update_script.log" | sudo crontab -
+		echo "Done"
+		sleep 1
+
+		echo "Installing inotify-tools to spy /etc/crontab"
+		sudo apt install inotify-tools
+		printf '#!/bin/sh
+
+# CONFIGURATION
+DIR=" /etc/crontab"
+EVENTS="modify"
+
+# MAIN
+inotifywait -m -e $EVENTS --timefmt "%Y-%m-%d %H:%M:%S" --format "%T %f" $DIR |
+while read date time file
+do
+    echo "$date $time Fichier modifie: $file"
+done
+' | sudo tee /etc/init.d/crontab_spy.sh
+		sudo chmod +x /etc/init.d/crontab_spy.sh
+		sudo update-rc.d crontab_spy.sh defaults
+		sudo sh /etc/init.d/crontab_spy.sh
+		echo "00 00 * * * /etc/init.d/crontab_spy.sh" | sudo crontab -
 	fi
 fi
