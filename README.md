@@ -9,8 +9,10 @@ After debian login use
 to login as root
 
 then 
-> apt update
-> apt upgrade
-> apt install git
-> git clone https://github.com/Maxmystere/DebianStuff
-> ./autoRogerSkyline.sh
+```
+apt update
+apt upgrade
+apt install git
+git clone https://github.com/Maxmystere/DebianStuff
+./autoRogerSkyline.sh
+```
