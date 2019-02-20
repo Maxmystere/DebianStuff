@@ -30,9 +30,14 @@ else
 		sleep 4
 		echo "Installing ssh"
 		sudo apt install ssh -y
-		echo "We will now change ssh port  to 4269"
+		echo "We will now :"
+		echo "change ssh port to 4269"
+		echo "allow only public key"
+		echo "Prevent root access from ssh"
 		sleep 3
 		sudo sed -i 's/#Port 22/Port 4269/' /etc/ssh/sshd_config
+		sudo sed -i 's/#PasswordAuthentication yes/PasswordAuthentication no/' /etc/ssh/sshd_config
+		sudo sed -i 's/#PermitRootLogin prohibit-password/PermitRootLogin no/' /etc/ssh/sshd_config
 		echo "Done ! Restarting SSH"
 		sudo service sshd restart
 
