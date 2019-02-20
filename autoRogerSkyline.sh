@@ -128,19 +128,19 @@ apt upgrade
 
 		echo "Installing inotify-tools to spy /etc/crontab"
 		sudo apt install inotify-tools
-		printf '#!/bin/sh
+		printf "#!/bin/sh
 
 # CONFIGURATION
-DIR=" /etc/crontab"
-EVENTS="modify"
+DIR='/etc/crontab'
+EVENTS='modify'
 
 # MAIN
-inotifywait -m -e $EVENTS --timefmt "%Y-%m-%d %H:%M:%S" --format "%T %f" $DIR |
+inotifywait -m -e $EVENTS --timefmt '%Y-%m-%d %H:%M:%S' --format '%T %f' $DIR |
 while read date time file
 do
-    echo "$date $time Fichier modifie: $file"
+    echo '$date $time Fichier modifie: $file'
 done
-' | sudo tee /etc/init.d/crontab_spy.sh
+" | sudo tee /etc/init.d/crontab_spy.sh
 		sudo chmod +x /etc/init.d/crontab_spy.sh
 		sudo update-rc.d crontab_spy.sh defaults
 		sudo sh /etc/init.d/crontab_spy.sh
