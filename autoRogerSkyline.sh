@@ -126,23 +126,11 @@ apt upgrade
 		echo "Done"
 		#sleep 1
 
-		echo "Installing inotify-tools to spy /etc/crontab"
-		sudo apt install inotify-tools
-		printf "#!/bin/sh
-
-# CONFIGURATION
-DIR=\"/etc/crontab\"
-EVENTS=\"modify\"
-
-# MAIN
-inotifywait -m -e \$EVENTS --timefmt '%%Y-%%m-%%d %%H:%%M:%%S' --format '%%T %%f' \$DIR |
-while read date time file
-do
-    echo \"\$date \$time Fichier modifie: \$file\"
-done
-" | sudo tee /etc/init.d/crontab_spy.sh
-		sudo chmod +x /etc/init.d/crontab_spy.sh
-		sudo update-rc.d crontab_spy.sh defaults
-		echo "00 00 * * * /etc/init.d/crontab_spy.sh" | sudo crontab -
+		echo "Installing incron and mailutils to spy /etc/crontab"
+		sudo apt install mailutils -y
+		sudo apt install incron -y
+		echo "root" | sudo tee -a /etc/incron.allow
+		printf "echo HELLOWORLD\n" | sudo tee /root/script/send_cron_mail.sh
+		printf "/etc/crontab IN_MODIFY root/send_mail_function\n" | sudo incrontab -
 	fi
 fi
