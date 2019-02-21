@@ -49,75 +49,64 @@ else
 		printf "#!/bin/sh
 # /etc/init.d/firewall
 
-case \"\$1\" in
-	start)
-		# Vider les tables actuelles
-		sudo iptables -t filter -F
+# Vider les tables actuelles
+sudo iptables -t filter -F
 
-		# Vider les regles personnelles
-		sudo iptables -t filter -X
+# Vider les regles personnelles
+sudo iptables -t filter -X
 
-		# Interdire toute connexion entrante et sortante
-		sudo iptables -t filter -P INPUT DROP
-		sudo iptables -t filter -P FORWARD DROP
-		sudo iptables -t filter -P OUTPUT DROP
+# Interdire toute connexion entrante et sortante
+sudo iptables -t filter -P INPUT DROP
+sudo iptables -t filter -P FORWARD DROP
+sudo iptables -t filter -P OUTPUT DROP
 
-		# ---
+# ---
 
-		# Ne pas casser les connexions etablies
-		sudo iptables -A INPUT -m state --state RELATED,ESTABLISHED -j ACCEPT
-		sudo iptables -A OUTPUT -m state --state RELATED,ESTABLISHED -j ACCEPT
+# Ne pas casser les connexions etablies
+sudo iptables -A INPUT -m state --state RELATED,ESTABLISHED -j ACCEPT
+sudo iptables -A OUTPUT -m state --state RELATED,ESTABLISHED -j ACCEPT
 
-		# Autoriser loopback
-		sudo iptables -t filter -A INPUT -i lo -j ACCEPT
-		sudo iptables -t filter -A OUTPUT -o lo -j ACCEPT
+# Autoriser loopback
+sudo iptables -t filter -A INPUT -i lo -j ACCEPT
+sudo iptables -t filter -A OUTPUT -o lo -j ACCEPT
 
-		# ICMP (Ping)
-		sudo iptables -t filter -A INPUT -p icmp -j ACCEPT
-		sudo iptables -t filter -A OUTPUT -p icmp -j ACCEPT
+# ICMP (Ping)
+sudo iptables -t filter -A INPUT -p icmp -j ACCEPT
+sudo iptables -t filter -A OUTPUT -p icmp -j ACCEPT
 
-		# ---
+# ---
 
-		# SSH In/Out
-		sudo iptables -t filter -A INPUT -p tcp --dport 2222 -j ACCEPT
-		sudo iptables -t filter -A OUTPUT -p tcp --dport 2222 -j ACCEPT
+# SSH In/Out
+sudo iptables -t filter -A INPUT -p tcp --dport 2222 -j ACCEPT
+sudo iptables -t filter -A OUTPUT -p tcp --dport 2222 -j ACCEPT
 
-		# DNS In/Out
-		sudo iptables -t filter -A OUTPUT -p tcp --dport 53 -j ACCEPT
-		sudo iptables -t filter -A OUTPUT -p udp --dport 53 -j ACCEPT
-		sudo iptables -t filter -A INPUT -p tcp --dport 53 -j ACCEPT
-		sudo iptables -t filter -A INPUT -p udp --dport 53 -j ACCEPT
+# DNS In/Out
+sudo iptables -t filter -A OUTPUT -p tcp --dport 53 -j ACCEPT
+sudo iptables -t filter -A OUTPUT -p udp --dport 53 -j ACCEPT
+sudo iptables -t filter -A INPUT -p tcp --dport 53 -j ACCEPT
+sudo iptables -t filter -A INPUT -p udp --dport 53 -j ACCEPT
 
-		# NTP Out
-		sudo iptables -t filter -A OUTPUT -p udp --dport 123 -j ACCEPT
+# NTP Out
+sudo iptables -t filter -A OUTPUT -p udp --dport 123 -j ACCEPT
 
-		# HTTP + HTTPS Out
-		sudo iptables -t filter -A OUTPUT -p tcp --dport 80 -j ACCEPT
-		sudo iptables -t filter -A OUTPUT -p tcp --dport 443 -j ACCEPT
+# HTTP + HTTPS Out
+sudo iptables -t filter -A OUTPUT -p tcp --dport 80 -j ACCEPT
+sudo iptables -t filter -A OUTPUT -p tcp --dport 443 -j ACCEPT
 
-		# HTTP + HTTPS In
-		sudo iptables -t filter -A INPUT -p tcp --dport 80 -j ACCEPT
-		sudo iptables -t filter -A INPUT -p tcp --dport 443 -j ACCEPT
-		sudo iptables -t filter -A INPUT -p tcp --dport 8443 -j ACCEPT
+# HTTP + HTTPS In
+sudo iptables -t filter -A INPUT -p tcp --dport 80 -j ACCEPT
+sudo iptables -t filter -A INPUT -p tcp --dport 443 -j ACCEPT
+sudo iptables -t filter -A INPUT -p tcp --dport 8443 -j ACCEPT
 
-		# Synflood Protection
-		sudo iptables -A INPUT -p tcp --syn -m limit --limit 2/s --limit-burst 30 -j ACCEPT
+# Synflood Protection
+sudo iptables -A INPUT -p tcp --syn -m limit --limit 2/s --limit-burst 30 -j ACCEPT
 
-		# Pingflood Protection
-		sudo iptables -A INPUT -p icmp --icmp-type echo-request -m limit --limit 1/s -j ACCEPT
+# Pingflood Protection
+sudo iptables -A INPUT -p icmp --icmp-type echo-request -m limit --limit 1/s -j ACCEPT
 
-		# Portscan Protection
-		sudo iptables -A INPUT -p tcp --tcp-flags ALL NONE -m limit --limit 1/h -j ACCEPT
-		sudo iptables -A INPUT -p tcp --tcp-flags ALL ALL -m limit --limit 1/h -j ACCEPT
-		;;
-	stop)
-		echo \"Can't really be stopped for now\"
-		;;
-	*)
-	echo \"Usage: {start|stop}\"
-	exit 1
-	;;
-esac
+# Portscan Protection
+sudo iptables -A INPUT -p tcp --tcp-flags ALL NONE -m limit --limit 1/h -j ACCEPT
+sudo iptables -A INPUT -p tcp --tcp-flags ALL ALL -m limit --limit 1/h -j ACCEPT
 
 exit 0
 " | sudo tee /etc/init.d/firewall
@@ -133,19 +122,8 @@ exit 0
 		printf "#!/bin/sh
 # /etc/init.d/update_package.sh
 
-case \"\$1\" in
-	start)
-		sudo apt update
-		sudo apt upgrade
-		;;
-	stop)
-		echo \"Can't really be stopped for now\"
-		;;
-	*)
-	echo \"Usage: {start|stop}\"
-	exit 1
-	;;
-esac
+sudo apt update
+sudo apt upgrade
 
 exit 0
 " | sudo tee /etc/init.d/update_package.sh
