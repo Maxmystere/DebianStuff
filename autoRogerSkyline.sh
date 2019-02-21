@@ -47,65 +47,78 @@ else
 		echo "Installing firewall"
 		#sleep 1
 		printf "#!/bin/sh
+# /etc/init.d/firewall
 
-# Vider les tables actuelles
-iptables -t filter -F
+case "$1" in
+	start)
+		# Vider les tables actuelles
+		iptables -t filter -F
 
-# Vider les regles personnelles
-iptables -t filter -X
+		# Vider les regles personnelles
+		iptables -t filter -X
 
-# Interdire toute connexion entrante et sortante
-iptables -t filter -P INPUT DROP
-iptables -t filter -P FORWARD DROP
-iptables -t filter -P OUTPUT DROP
+		# Interdire toute connexion entrante et sortante
+		iptables -t filter -P INPUT DROP
+		iptables -t filter -P FORWARD DROP
+		iptables -t filter -P OUTPUT DROP
 
-# ---
+		# ---
 
-# Ne pas casser les connexions etablies
-iptables -A INPUT -m state --state RELATED,ESTABLISHED -j ACCEPT
-iptables -A OUTPUT -m state --state RELATED,ESTABLISHED -j ACCEPT
+		# Ne pas casser les connexions etablies
+		iptables -A INPUT -m state --state RELATED,ESTABLISHED -j ACCEPT
+		iptables -A OUTPUT -m state --state RELATED,ESTABLISHED -j ACCEPT
 
-# Autoriser loopback
-iptables -t filter -A INPUT -i lo -j ACCEPT
-iptables -t filter -A OUTPUT -o lo -j ACCEPT
+		# Autoriser loopback
+		iptables -t filter -A INPUT -i lo -j ACCEPT
+		iptables -t filter -A OUTPUT -o lo -j ACCEPT
 
-# ICMP (Ping)
-iptables -t filter -A INPUT -p icmp -j ACCEPT
-iptables -t filter -A OUTPUT -p icmp -j ACCEPT
+		# ICMP (Ping)
+		iptables -t filter -A INPUT -p icmp -j ACCEPT
+		iptables -t filter -A OUTPUT -p icmp -j ACCEPT
 
-# ---
+		# ---
 
-# SSH In/Out
-iptables -t filter -A INPUT -p tcp --dport 2222 -j ACCEPT
-iptables -t filter -A OUTPUT -p tcp --dport 2222 -j ACCEPT
+		# SSH In/Out
+		iptables -t filter -A INPUT -p tcp --dport 2222 -j ACCEPT
+		iptables -t filter -A OUTPUT -p tcp --dport 2222 -j ACCEPT
 
-# DNS In/Out
-iptables -t filter -A OUTPUT -p tcp --dport 53 -j ACCEPT
-iptables -t filter -A OUTPUT -p udp --dport 53 -j ACCEPT
-iptables -t filter -A INPUT -p tcp --dport 53 -j ACCEPT
-iptables -t filter -A INPUT -p udp --dport 53 -j ACCEPT
+		# DNS In/Out
+		iptables -t filter -A OUTPUT -p tcp --dport 53 -j ACCEPT
+		iptables -t filter -A OUTPUT -p udp --dport 53 -j ACCEPT
+		iptables -t filter -A INPUT -p tcp --dport 53 -j ACCEPT
+		iptables -t filter -A INPUT -p udp --dport 53 -j ACCEPT
 
-# NTP Out
-iptables -t filter -A OUTPUT -p udp --dport 123 -j ACCEPT
+		# NTP Out
+		iptables -t filter -A OUTPUT -p udp --dport 123 -j ACCEPT
 
-# HTTP + HTTPS Out
-iptables -t filter -A OUTPUT -p tcp --dport 80 -j ACCEPT
-iptables -t filter -A OUTPUT -p tcp --dport 443 -j ACCEPT
+		# HTTP + HTTPS Out
+		iptables -t filter -A OUTPUT -p tcp --dport 80 -j ACCEPT
+		iptables -t filter -A OUTPUT -p tcp --dport 443 -j ACCEPT
 
-# HTTP + HTTPS In
-iptables -t filter -A INPUT -p tcp --dport 80 -j ACCEPT
-iptables -t filter -A INPUT -p tcp --dport 443 -j ACCEPT
-iptables -t filter -A INPUT -p tcp --dport 8443 -j ACCEPT
+		# HTTP + HTTPS In
+		iptables -t filter -A INPUT -p tcp --dport 80 -j ACCEPT
+		iptables -t filter -A INPUT -p tcp --dport 443 -j ACCEPT
+		iptables -t filter -A INPUT -p tcp --dport 8443 -j ACCEPT
 
-# Synflood Protection
-iptables -A INPUT -p tcp --syn -m limit --limit 2/s --limit-burst 30 -j ACCEPT
+		# Synflood Protection
+		iptables -A INPUT -p tcp --syn -m limit --limit 2/s --limit-burst 30 -j ACCEPT
 
-# Pingflood Protection
-iptables -A INPUT -p icmp --icmp-type echo-request -m limit --limit 1/s -j ACCEPT
+		# Pingflood Protection
+		iptables -A INPUT -p icmp --icmp-type echo-request -m limit --limit 1/s -j ACCEPT
 
-# Portscan Protection
-iptables -A INPUT -p tcp --tcp-flags ALL NONE -m limit --limit 1/h -j ACCEPT
-iptables -A INPUT -p tcp --tcp-flags ALL ALL -m limit --limit 1/h -j ACCEPT
+		# Portscan Protection
+		iptables -A INPUT -p tcp --tcp-flags ALL NONE -m limit --limit 1/h -j ACCEPT
+		iptables -A INPUT -p tcp --tcp-flags ALL ALL -m limit --limit 1/h -j ACCEPT
+		;;
+	stop)
+		echo \"Can't really be stopped for now\"
+	*)
+	echo \"Usage: {start|stop}\"
+	exit 1
+	;;
+esac
+
+exit 0
 " | sudo tee /etc/init.d/firewall
 		sudo chmod +x /etc/init.d/firewall
 		sudo update-rc.d firewall defaults
