@@ -113,7 +113,6 @@ exit 0
 		sudo chmod +x /etc/init.d/firewall
 		sudo update-rc.d firewall defaults
 		sudo sh /etc/init.d/firewall
-		sudo service firewall start
 		echo -e "\e[33mFirewall and DDOS Protection successfully installed at startup\e[0m"
 		#sleep 2
 
