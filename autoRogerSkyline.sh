@@ -112,6 +112,7 @@ case \"\$1\" in
 		;;
 	stop)
 		echo \"Can't really be stopped for now\"
+		;;
 	*)
 	echo \"Usage: {start|stop}\"
 	exit 1
