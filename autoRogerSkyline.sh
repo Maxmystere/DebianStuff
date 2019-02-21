@@ -129,7 +129,7 @@ apt upgrade
 		echo "Installing incron and mailutils to spy /etc/crontab"
 		sudo apt install mailutils -y
 		sudo apt install incron -y
-		echo "root" | sudo tee -a /etc/incron.allow
+		echo "root" | sudo tee /etc/incron.allow
 		printf "/etc/crontab IN_MODIFY echo \"crontab file has been modified\" | mail -s \"crontab Alert\" root@localhost\n" | sudo incrontab -
 	fi
 fi
