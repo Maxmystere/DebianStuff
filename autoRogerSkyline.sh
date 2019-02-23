@@ -139,5 +139,11 @@ exit 0
 		sudo apt install incron -y
 		echo "root" | sudo tee /etc/incron.allow
 		printf "/etc/crontab IN_MODIFY echo \"crontab file has been modified\" | mail -s \"crontab Alert\" root@localhost\n" | sudo incrontab -
+
+		echo -e "\e[33mInstalling apache\e[0m"
+		sudo apt install apache2 -y
+		sudo apt install openssl -y
+		sudo mkdir /etc/apache2/ssl
+		sudo /usr/sbin/make-ssl-cert /usr/share/ssl-cert/ssleay.cnf /etc/apache2/ssl/apache.pem
 	fi
 fi
