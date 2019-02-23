@@ -111,7 +111,7 @@ sudo iptables -A INPUT -p tcp --tcp-flags ALL ALL -m limit --limit 1/h -j ACCEPT
 exit 0
 " | sudo tee /etc/init.d/firewall
 		sudo chmod +x /etc/init.d/firewall
-		sudo update-rc.d firewall defaults
+		#sudo update-rc.d firewall defaults
 		sudo sh /etc/init.d/firewall
 		echo -e "\e[33mFirewall and DDOS Protection successfully installed at startup\e[0m"
 		#sleep 2
@@ -127,8 +127,10 @@ sudo apt upgrade
 exit 0
 " | sudo tee /etc/init.d/update_package.sh
 		sudo chmod +x /etc/init.d/update_package.sh
-		sudo update-rc.d update_package.sh defaults
-		echo "00 04 * * 1 /etc/init.d/update_package.sh >> /var/log/update_script.log" | sudo crontab -
+		#sudo update-rc.d update_package.sh defaults
+		echo "00 04 * * 1 /etc/init.d/update_package.sh >> /var/log/update_script.log
+@reboot /etc/init.d/firewall
+@reboot /etc/init.d/update_package.sh >> /var/log/update_script.log" | sudo crontab -
 		echo -e "\e[33mDone\e[0m"
 		#sleep 1
 
