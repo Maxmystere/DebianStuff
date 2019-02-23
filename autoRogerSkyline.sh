@@ -145,6 +145,10 @@ exit 0
 		sudo apt install apache2 -y
 		sudo apt install openssl -y
 		sudo mkdir /etc/apache2/ssl
-		sudo /usr/sbin/make-ssl-cert /usr/share/ssl-cert/ssleay.cnf /etc/apache2/ssl/apache.pem
+		echo -e "\e[33mYou now have to :
+	- Remove DHCP
+	- Add apache Website\e[0m"
+		# https://wiki.debian.org/fr/NetworkConfiguration
+		# https://technique.arscenic.org/lamp-linux-apache-mysql-php/apache-le-serveur-http/modules-complementaires/article/installer-et-configurer-le-module-ssl-pour-apache2
 	fi
 fi
