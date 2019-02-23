@@ -45,9 +45,10 @@ else
 		echo -e "\e[33mSuccess\e[0m"
 		
 		echo -e "\e[33mInstalling firewall\e[0m"
+		sudo mkdir /etc/startup
 		#sleep 1
 		printf "#!/bin/sh
-# /etc/init.d/firewall
+# /etc/startup/firewall
 
 # Vider les tables actuelles
 sudo iptables -t filter -F
@@ -109,28 +110,28 @@ sudo iptables -A INPUT -p tcp --tcp-flags ALL NONE -m limit --limit 1/h -j ACCEP
 sudo iptables -A INPUT -p tcp --tcp-flags ALL ALL -m limit --limit 1/h -j ACCEPT
 
 exit 0
-" | sudo tee /etc/init.d/firewall
-		sudo chmod +x /etc/init.d/firewall
+" | sudo tee /etc/startup/firewall
+		sudo chmod +x /etc/startup/firewall
 		#sudo update-rc.d firewall defaults
-		sudo sh /etc/init.d/firewall
+		sudo sh /etc/startup/firewall
 		echo -e "\e[33mFirewall and DDOS Protection successfully installed at startup\e[0m"
 		#sleep 2
 
 		echo -e "\e[33mAdding planned task for updating apt\e[0m"
 		#sleep 1
 		printf "#!/bin/sh
-# /etc/init.d/update_package.sh
+# /etc/startup/update_package.sh
 
 sudo apt update
 sudo apt upgrade
 
 exit 0
-" | sudo tee /etc/init.d/update_package.sh
-		sudo chmod +x /etc/init.d/update_package.sh
+" | sudo tee /etc/startup/update_package.sh
+		sudo chmod +x /etc/startup/update_package.sh
 		#sudo update-rc.d update_package.sh defaults
-		echo "00 04 * * 1 /etc/init.d/update_package.sh >> /var/log/update_script.log
-@reboot /etc/init.d/firewall
-@reboot /etc/init.d/update_package.sh >> /var/log/update_script.log" | sudo crontab -
+		echo "00 04 * * 1 /etc/startup/update_package.sh >> /var/log/update_script.log
+@reboot /etc/startup/firewall
+@reboot /etc/startup/update_package.sh >> /var/log/update_script.log" | sudo crontab -
 		echo -e "\e[33mDone\e[0m"
 		#sleep 1
 
