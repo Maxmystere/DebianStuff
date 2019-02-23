@@ -1,0 +1,286 @@
+﻿@font-face
+{
+	font-family: "Bellefair";
+	src: url(fonts/Bellefair-Regular.otf) format("opentype");
+}
+
+@font-face
+{
+	font-family: 'Oswald ExtraLight';
+	src: url(fonts/Oswald-ExtraLight.ttf) format("truetype");
+}
+
+@font-face
+{
+	font-family: 'Oswald Medium';
+	src: url(fonts/Oswald-Medium.ttf) format("truetype");
+}
+
+h1
+{
+	font-family: "Bellefair",Arial,serif;
+	font-size: 5em;
+	font-weight: normal;
+}
+
+#main_wrapper, body, html
+{
+	background-color: #EAEAE9;
+	margin: 0;
+}
+
+header
+{	
+	display: flex;
+	height: 125px;
+	margin-bottom: 80px;
+	align-items: center;
+	justify-content: space-around;
+	background-color: #222;
+	color: #ee9009;
+	border-bottom: 3px solid #ED800B;
+}
+
+#contact_me
+{	
+	display: flex;
+	height: 125px;
+	margin-top: 149px;
+	align-items: center;
+	justify-content: space-around;
+	background-color: #222;
+	color: #ED800B;
+	border-top: 3px solid #ED800B;
+}
+
+#contact_me h2, #contact_me p
+{
+	margin: 0px 10px 0px 10px;
+}
+
+#layout
+{
+	width: 90%;
+	display: flex;
+	margin: auto;
+	align-items: top;
+	justify-content: space-around;
+	flex-direction: row;
+}
+
+#video
+{
+	display: flex;	
+	align-items: center;
+	width: 90%;
+	margin: auto;
+	justify-content: center;
+}
+
+article
+{
+	width: 20%;
+	min-width: 250px;
+	text-align: justify;
+	font-family: "Oswald ExtraLight",Arial,sans-serif;
+	font-size: 1.15em;
+	margin-bottom: 20px;
+	position: relative;
+	padding-bottom: 30px;
+}
+
+.logo
+{
+	width: 92%;
+	position: absolute;
+	max-width: 400px;
+	left: 4%;
+	top: 100px;
+}
+
+#docs
+{
+	width: 90%;
+	margin: auto;
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: space-between;
+}
+
+.pres
+{
+	margin: 20px 0px 10px 15px;
+	color: #CC4D12;
+	font-size: 1.3em;
+}
+
+#docs p /*Parce que article p est défini plus bas*/
+{
+	margin: 10px 0px 5px 30px;
+}
+
+#docs a
+{
+	text-decoration: underline solid black;
+	color: black;
+
+}
+
+.desc
+{
+	margin-top: 250px;
+	margin-bottom: 0px;
+}
+article h2
+{
+	font-family: "Oswald Medium","Bellefair",Arial,sans-serif;
+	text-align: center;
+	margin-top: 20px;
+}
+
+.back-col-i
+{
+	background-color: #FFF;
+	padding:15px 5px 0px 5px;
+	border-radius: 10px;
+	border-top-left-radius: 25px 50px;
+	border-bottom-right-radius: 25px 50px;
+}
+
+.back-col-i h2
+{
+	color: #CC4D12;
+}
+
+.back-col-o
+{
+	background-color: #D7D7D6;
+	padding:15px 5px 0px 5px;
+	border-radius: 10px;
+	border-top-left-radius: 25px 50px;
+	border-bottom-right-radius: 25px 50px;
+}
+
+.back-col-o h2
+{
+	color: #B24310;
+}
+
+.xs
+{
+	display: none;
+}
+
+@media screen and (max-width: 1280px)
+{
+	#layout
+	{
+		flex-wrap: wrap;
+	}
+
+	header
+	{
+		height: 200px;
+		flex-direction: row;
+		text-align: center;
+		align-items: center;
+		justify-content: space-around;
+		padding:  10px 10% 100px 10%;
+		flex-wrap: wrap;
+	}	
+
+	article
+	{
+		margin: 0px 5% 30px 5%;
+		width: 90%;
+	}
+
+	.small
+	{
+		display: none;
+	}
+
+	.xs
+	{
+		display: inline;
+	}
+
+}
+
+@media screen and (max-width: 720px)
+{
+	#main_wrapper, #layout
+	{
+		flex-direction: column;
+	}
+
+	article
+	{
+		margin: 0px 5% 30px 5%;
+		width: 90%;
+	}
+
+	#contact_me
+	{
+		margin-top: 30px;
+		flex-direction: column;
+		height: 200px;
+		justify-content: flex-start;
+
+	}
+
+	header
+	{
+		height: 250px;
+		flex-direction: column;
+		text-align: center;
+		align-items: center;
+		justify-content: flex-end;
+	}
+
+	header h1, header p
+	{
+		margin: 10px;
+	}
+
+	header p
+	{
+		display: none;
+	}
+
+	.small
+	{
+		display: none;
+	}
+
+	.xs
+	{
+		display: inline;
+	}
+}
+
+@media screen and (max-width: 480px)
+{
+	header
+	{
+		height: 250px;
+		padding: 0px;
+		display: flex;
+		flex-direction: column;
+	}
+	.small
+	{
+		display: none;
+	}
+
+	.xs
+	{
+		display: inline;
+		width: 100vw;
+	}
+
+	article
+	{
+		width: 90%;
+	}
+}

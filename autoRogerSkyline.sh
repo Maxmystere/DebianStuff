@@ -149,6 +149,7 @@ exit 0
 	- Remove DHCP
 	- Add apache Website\e[0m"
 		# https://wiki.debian.org/fr/NetworkConfiguration
+		# http://jodies.de/ipcalc?host=10.11.200.226&mask1=16&mask2=30
 		# https://technique.arscenic.org/lamp-linux-apache-mysql-php/apache-le-serveur-http/modules-complementaires/article/installer-et-configurer-le-module-ssl-pour-apache2
 	fi
 fi
