@@ -162,5 +162,6 @@ echo \"crontab file has been modified\" | mail -s \"crontab Alert\" root@localho
 		# https://wiki.debian.org/fr/NetworkConfiguration
 		# http://jodies.de/ipcalc?host=10.11.200.226&mask1=16&mask2=30
 		# https://technique.arscenic.org/lamp-linux-apache-mysql-php/apache-le-serveur-http/modules-complementaires/article/installer-et-configurer-le-module-ssl-pour-apache2
+		# https://www.system-linux.eu/index.php?post/2009/11/02/Attaque-Slowloris-l-essayer-et-l-empecher
 	fi
 fi
