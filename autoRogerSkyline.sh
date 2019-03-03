@@ -109,6 +109,9 @@ sudo iptables -A INPUT -p icmp --icmp-type echo-request -m limit --limit 1/s -j 
 sudo iptables -A INPUT -p tcp --tcp-flags ALL NONE -m limit --limit 1/h -j ACCEPT
 sudo iptables -A INPUT -p tcp --tcp-flags ALL ALL -m limit --limit 1/h -j ACCEPT
 
+# Slowloris Protection
+sudo iptables -I INPUT -p tcp --dport 80 -m connlimit --connlimit-above 10 --connlimit-mask 40 -j DROP
+
 exit 0
 " | sudo tee /etc/startup/firewall
 		sudo chmod +x /etc/startup/firewall
@@ -142,13 +145,11 @@ exit 0
 # /etc/startup/sendmail.sh
 
 echo \"crontab file has been modified\" | mail -s \"crontab Alert\" root@localhost\n
-
-exit 0
 " | sudo tee /etc/startup/sendmail.sh
 		sudo chmod +x /etc/startup/sendmail.sh
 		echo "root" | sudo tee /etc/incron.allow
 		printf "/etc/crontab IN_MODIFY /etc/startup/sendmail.sh
-/var/www IN_MODIFY service apache2 restart
+/var/www/ IN_MODIFY service apache2 restart
 " | sudo incrontab -
 
 		echo -e "\e[33mInstalling apache\e[0m"
