@@ -123,7 +123,7 @@ exit 0
 # /etc/startup/update_package.sh
 
 sudo apt update
-sudo apt upgrade
+sudo apt upgrade -y
 
 exit 0
 " | sudo tee /etc/startup/update_package.sh
@@ -131,15 +131,25 @@ exit 0
 		#sudo update-rc.d update_package.sh defaults
 		echo "00 04 * * 1 /etc/startup/update_package.sh >> /var/log/update_script.log
 @reboot /etc/startup/firewall
-@reboot /etc/startup/update_package.sh >> /var/log/update_script.log" | sudo crontab -
+@reboot /bin/sleep 10 ; /etc/startup/update_package.sh >> /var/log/update_script.log" | sudo crontab -
 		echo -e "\e[33mDone\e[0m"
 		#sleep 1
 
 		echo -e "\e[33mInstalling incron and mailutils to spy /etc/crontab\e[0m"
 		sudo apt install mailutils -y
 		sudo apt install incron -y
+				printf "#!/bin/sh
+# /etc/startup/sendmail.sh
+
+echo \"crontab file has been modified\" | mail -s \"crontab Alert\" root@localhost\n
+
+exit 0
+" | sudo tee /etc/startup/sendmail.sh
+		sudo chmod +x /etc/startup/sendmail.sh
 		echo "root" | sudo tee /etc/incron.allow
-		printf "/etc/crontab IN_MODIFY echo \"crontab file has been modified\" | mail -s \"crontab Alert\" root@localhost\n" | sudo incrontab -
+		printf "/etc/crontab IN_MODIFY /etc/startup/sendmail.sh
+/var/www IN_MODIFY service apache2 restart
+" | sudo incrontab -
 
 		echo -e "\e[33mInstalling apache\e[0m"
 		sudo apt install apache2 -y
